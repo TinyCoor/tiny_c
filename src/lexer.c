@@ -21,6 +21,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
         if(isalpha(lexer->c)){
             return lexer_advance_with(lexer, lexer_parse_id(lexer));
         }
+
         if(isdigit(lexer->c))
             return lexer_advance_with(lexer, lexer_parse_number(lexer));
 

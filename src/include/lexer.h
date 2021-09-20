@@ -18,10 +18,18 @@ lexer_t* lexer_init(char* src);
 
 char lexer_peek(lexer_t* lexer,int offset);
 
+/**
+ * 将字符指针往前前进一步
+ * @param lexer
+ */
 void lexer_advance(lexer_t* lexer);
 
 token_t *lexer_advance_current(lexer_t* lexer,int type);
 
+/**
+ * 跳过特殊的字符控格符或者 tab`\t`
+ * @param lexer
+ */
 void lexer_skip_whitespace(lexer_t* lexer);
 
 token_t* lexer_advance_with(lexer_t* lexer,token_t* token);

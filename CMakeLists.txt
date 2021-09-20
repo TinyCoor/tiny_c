@@ -11,4 +11,12 @@ set(TINY_C_HEADER ./src/include/lexer.h
         ./src/include/token.h
         )
 
-add_executable(tiny_c ${TINY_C_SOURCE} src/include/parser.h src/parser.c src/include/ast.h src/ast.c)
+add_executable(tiny_c ${TINY_C_SOURCE} )
+
+add_custom_command(
+        TARGET tiny_c
+        POST_BUILD
+        COMMAND
+            tiny_c main.tag
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/examples
+)
