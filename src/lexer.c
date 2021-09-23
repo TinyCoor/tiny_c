@@ -19,16 +19,16 @@ token_t *lexer_next_token(lexer_t *lexer) {
         lexer_skip_whitespace(lexer);
 
         if(isalpha(lexer->c)){
-            return lexer_advance_with(lexer, lexer_parse_id(lexer));
+            return lexer_parse_id(lexer);
         }
 
         if(isdigit(lexer->c))
-            return lexer_advance_with(lexer, lexer_parse_number(lexer));
+            return lexer_parse_number(lexer);
 
         switch (lexer->c) {
             case '=':{
                 if(lexer_peek(lexer,1) == '>')
-                    return lexer_advance_with(lexer, token_init("=>",TOKEN_ARROW_RIGHT));
+                    return lexer_advance_with(lexer, lexer_advance_with(lexer, token_init("=>",TOKEN_ARROW_RIGHT)));
                 return lexer_advance_with(lexer, token_init("=", TOKEN_EQUALS));
             }
             case '(':{return lexer_advance_current(lexer,TOKEN_LPAREN);}
@@ -49,7 +49,6 @@ token_t *lexer_next_token(lexer_t *lexer) {
     }
     return token_init(0,TOKEN_EOF);
 }
-
 
 void lexer_advance(lexer_t *lexer) {
     if(lexer->i < lexer->src_size && lexer->c !='\0'){
@@ -84,7 +83,6 @@ token_t *lexer_parse_number(lexer_t *lexer) {
     }
     return token_init(value,TOKEN_INT);
 }
-
 
 token_t *lexer_advance_with(lexer_t *lexer,token_t* token) {
     lexer_advance(lexer);

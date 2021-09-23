@@ -7,7 +7,8 @@
 #include "include/io.h"
 
 char *read_file(const char *file_name) {
-    FILE *file = fopen(file_name, "r");
+    int pos =0;
+    FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
         fprintf(stderr, "ERROR:Could not open file %s :%s\n",
                 file_name, strerror(errno));
@@ -17,7 +18,7 @@ char *read_file(const char *file_name) {
         fprintf(stderr, "ERROR:Could not open file %s :%s\n", file_name, strerror(errno));
         exit(-1);
     }
-    int pos = ftell(file);
+    pos = ftell(file);
     if (pos < 0) {
         fprintf(stderr, "ERROR:Could not open file %s :%s\n",
                 file_name, strerror(errno));
@@ -29,7 +30,7 @@ char *read_file(const char *file_name) {
         exit(-1);
     }
 
-    char *buffer =(char*)malloc((size_t)pos);
+    char *buffer =(char*)malloc((size_t)pos* sizeof(char));
     memset(buffer,0,pos);
     size_t n = fread(buffer, 1, (size_t)pos, file);
     if (ferror(file)) {

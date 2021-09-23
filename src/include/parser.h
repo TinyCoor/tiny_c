@@ -17,6 +17,15 @@ ast_t* parser_parse(parser_t* parser);
 
 ast_t* parser_parse_compound(parser_t* parser);
 
+ast_t* parser_parse_expr(parser_t* parser);
+
+ast_t* parser_parse_id(parser_t* parser);
+
+ast_t* parser_parse_list(parser_t* parser);
+
+ast_t* parser_parse_block(parser_t* parser);
+
+ast_t* parser_parse_int(parser_t* parser);
 
 token_t* parser_consume(parser_t* parser,int type);
 

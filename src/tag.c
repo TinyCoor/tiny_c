@@ -10,7 +10,8 @@ void tag_compile(char *src) {
     lexer_t* lexer = lexer_init(src);
     parser_t* parser = parser_init(lexer);
     ast_t* root = parser_parse(parser);
-    printf("%p\n",root);
+//    printf("%p\n",root);
+//
     token_t* token =0;
     while ((token = lexer_next_token(lexer))->type !=TOKEN_EOF){
         printf("%s\n", token_to_cstr(token));

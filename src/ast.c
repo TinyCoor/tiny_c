@@ -7,6 +7,9 @@
 ast_t *ast_init(int type) {
     ast_t* root = calloc(1,sizeof(struct AST_STRUCT));
     root->type = type;
+    if(type == AST_COMPOUND)
+        root->child = list_init(sizeof(struct AST_STRUCT));
+
 
     return root;
 }
