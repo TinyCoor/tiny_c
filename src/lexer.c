@@ -6,10 +6,10 @@
 #include "include/macros.h"
 
 lexer_t* lexer_init(char* src){
-    lexer_t* lexer = calloc(1,sizeof(struct LEXER_STRUCT));
-    lexer->src =src;
-    lexer->src_size =strlen(src);
-    lexer->c= src[lexer->i];
+    lexer_t* lexer = calloc (1,sizeof(struct LEXER_STRUCT));
+    lexer->src = src;
+    lexer->src_size = strlen(src);
+    lexer-> c = src[lexer->i];
 
     return lexer;
 }

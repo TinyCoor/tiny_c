@@ -38,8 +38,26 @@ char *read_file(const char *file_name) {
                 file_name, strerror(errno));
         exit(-1);
     }
+    //TODO 增加 0避免垃圾
+    memset(buffer+pos,0,1);
     fclose(file);
     return buffer;
+}
+
+void write_file(const char *file_name, char *output_buffer) {
+    FILE *file = fopen(file_name, "wb");
+    if (file == NULL) {
+        fprintf(stderr, "ERROR:Could not open file %s :%s\n",
+                file_name, strerror(errno));
+        exit(-1);
+    }
+
+    if(!fwrite(output_buffer, sizeof(char), strlen(output_buffer),file)){
+        fclose(file);
+        printf("Could not write file\n");
+        exit(-1);
+    }
+    fclose(file);
 }
 
 

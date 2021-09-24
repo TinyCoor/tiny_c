@@ -8,7 +8,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 parser_t *parser_init(lexer_t *lexer) {
     parser_t* parser =calloc(1, sizeof(struct PARSER_STRUCT));
     parser->token= lexer_next_token(lexer);
@@ -47,7 +46,8 @@ ast_t *parser_parse_compound(parser_t *parser) {
    }
    if(should_close)
        parser_consume(parser,TOKEN_RBRACE);
-    return ast_init(AST_NOOP);
+
+    return compound;
 }
 
 ast_t *parser_parse_expr(parser_t *parser) {

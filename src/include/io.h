@@ -7,4 +7,6 @@
 #include <stdio.h>
 ///TODO fix bug why is garbage in the file
 char* read_file(const char *file_name);
+
+void write_file(const char* file_name,char* output_buffer);
 #endif //TINY_C_IO_H

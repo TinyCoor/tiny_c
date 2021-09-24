@@ -9,14 +9,18 @@ aux_source_directory(./src TINY_C_SOURCE)
 set(TINY_C_HEADER ./src/include/lexer.h
         ./src/include/tag.h
         ./src/include/token.h
+        ./src/include/ast.h
+        ./src/include/types.h
+        ./src/include/as_frontend.h
         )
 
-add_executable(tiny_c ${TINY_C_SOURCE} src/include/list.h src/list.c src/include/types.h src/types.c)
+add_executable(tiny_c ${TINY_C_SOURCE}  ${TINY_C_HEADER})
 
-#add_custom_command(
-#        TARGET tiny_c
-#        POST_BUILD
-#        COMMAND
-#            tiny_c main.tag
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/examples
-#)
+#该命令会在构建完成生成tiny_c 可执行文件时 执行tiny_c main.tag 命令
+add_custom_command(
+        TARGET tiny_c
+        POST_BUILD
+        COMMAND
+            tiny_c main.tag
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/examples
+)

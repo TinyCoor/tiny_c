@@ -11,5 +11,4 @@
 #define MIN(a,b) \
     (a) < (b) ? (a) : (b)
 
-
 #endif //TINY_C_MACROS_H

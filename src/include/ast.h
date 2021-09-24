@@ -5,6 +5,7 @@
 #ifndef TINY_C_AST_H
 #define TINY_C_AST_H
 #include "list.h"
+
 typedef struct AST_STRUCT{
 enum {
     AST_COMPOUND,
