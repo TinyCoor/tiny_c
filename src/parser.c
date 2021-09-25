@@ -62,7 +62,6 @@ ast_t *parser_parse_expr(parser_t *parser) {
     }
 }
 
-
 ast_t* parser_parse_id(parser_t* parser){
     char* value = calloc(strlen(parser->token->value) +1,sizeof(char ));
     strcpy(value,parser->token->value);
@@ -97,20 +96,30 @@ ast_t* parser_parse_id(parser_t* parser){
         if(parser->token->type == TOKEN_LPAREN){
             ast->type = AST_CALL;
             ast->value = parser_parse_list(parser);
+        } else{
+            if (parser->token->type == TOKEN_LBRACKET){
+                ast->type = AST_ACESS;
+                ast->value= parser_parse_list(parser);
+            }
         }
     }
+
     return ast;
 }
 
 ast_t* parser_parse_list(parser_t *parser) {
-    parser_consume(parser,TOKEN_LPAREN);
+    unsigned int is_bracket= parser->token->type== TOKEN_LBRACKET;
+
+    parser_consume(parser, is_bracket ? TOKEN_LBRACKET : TOKEN_LPAREN);
+
     ast_t* ast = ast_init(AST_COMPOUND);
     list_push(ast->child, parser_parse_expr(parser));
     while (parser->token->type == TOKEN_COMMA){
         parser_consume(parser,TOKEN_COMMA);
         list_push(ast->child, parser_parse_expr(parser));
     }
-    parser_consume(parser,TOKEN_RPAREN);
+
+    parser_consume(parser, is_bracket ?TOKEN_RBRACKET : TOKEN_RPAREN);
     if(parser->token->type == TOKEN_COLON)
     {
         parser_consume(parser,TOKEN_COLON);

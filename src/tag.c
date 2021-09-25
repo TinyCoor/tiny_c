@@ -38,8 +38,8 @@ void tag_compile(char *src) {
 //    }
     char* s = as_root(root);
     write_file("test.s",s);
-    sh("as test.s -o test.o");
-    sh("ld test.o -o test.exe");
+    sh("as --32 test.s -o test.o");
+    sh("ld test.o -o test.exe -m i386pe");
 //    printf("%s\n",s);
 }
 

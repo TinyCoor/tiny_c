@@ -35,11 +35,14 @@ token_t *lexer_next_token(lexer_t *lexer) {
             case ')':{return lexer_advance_current(lexer,TOKEN_RPAREN);}
             case '{':{return lexer_advance_current(lexer,TOKEN_LBRACE);}
             case '}':{return lexer_advance_current(lexer,TOKEN_RBRACE);}
+            case '[':{return lexer_advance_current(lexer,TOKEN_LBRACKET);}
+            case ']':{return lexer_advance_current(lexer,TOKEN_RBRACKET);}
             case ':':{return lexer_advance_current(lexer,TOKEN_COLON);}
             case ',':{return lexer_advance_current(lexer,TOKEN_COMMA);}
             case '<':{return lexer_advance_current(lexer,TOKEN_LT);}
             case '>':{return lexer_advance_current(lexer,TOKEN_GT);}
             case ';':{return lexer_advance_current(lexer,TOKEN_SEMI);}
+
             case '\0':{break;}
             default:{
                 printf("[Lexer]: Unexpected character '%c'\n",lexer->c);
