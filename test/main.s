@@ -12,7 +12,7 @@ _start:
 .global main
 main:
     pushl %ebp
-    mov %esp, %ebp
+    movl %esp, %ebp
 
     movl 8(%ebp),%eax
 

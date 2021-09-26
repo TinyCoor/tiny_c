@@ -8,6 +8,7 @@
 #include "include/as_frontend.h"
 #include <string.h>
 
+
 static char* sh(char* cmd){
     char* output = calloc(1,sizeof(char));
     output[0] ='\0';
@@ -36,7 +37,7 @@ void tag_compile(char *src) {
 //    while ((token = lexer_next_token(lexer))->type !=TOKEN_EOF){
 //        printf("%s\n", token_to_cstr(token));
 //    }
-    char* s = as_root(root);
+    char* s = as_root(root, list_init(sizeof(struct AST_STRUCT*)));
     write_file("test.s",s);
     sh("as --32 test.s -o test.o");
     sh("ld test.o -o test.exe -m i386pe");

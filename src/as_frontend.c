@@ -6,18 +6,30 @@
 #include <string.h>
 #include <stdio.h>
 
-char* as_compound(ast_t* ast){
+static ast_t *var_lookup(list_t* list,const char* name){
+    for (int i = 0; i <list->size ; ++i) {
+        ast_t *child_ast = list->items[i];
+
+        if(child_ast->type != AST_VARIABLE || ! child_ast->name)
+            continue;
+        if(strcmp(child_ast->name,name) ==0)
+            return child_ast;
+    }
+    return NULL;
+}
+
+char* as_compound(ast_t* ast,list_t* list){
     char* value = calloc(1,sizeof(char));
     for (int i = 0; i < ast->child->size; ++i) {
         ast_t* child_ast = (ast_t*) ast->child->items[i];
-        char* next_value = as(child_ast);
+        char* next_value = as(child_ast,list);
         value = realloc(value,(strlen(next_value) +1)*sizeof(char));
         strcat(value,next_value);
     }
     return value;
 }
 
-char* as_assignment(ast_t* ast){
+char* as_assignment(ast_t* ast,list_t* list){
     char *s = calloc(1,sizeof(char));
     if(ast->value->type == AST_FUNCTION){
         const char* template = ".global %s\n"
@@ -30,30 +42,37 @@ char* as_assignment(ast_t* ast){
         sprintf(s,template,ast->name, ast->name);
 
         ast_t* as_val = ast->value;
-        char* as_val_val = as(as_val->value);
+        for(int i=0; i < as_val->child->size; ++i){
+            ast_t* farg = as_val->child->items[i];
+            ast_t* arg_variable = ast_init(AST_VARIABLE);
+            arg_variable->name= farg->name;
+            arg_variable->int_value= (int)(4 * as_val->child->size)- ( i * 4);
+            list_push(list,arg_variable);
+        }
+        char* as_val_val = as(as_val->value,list);
         s = realloc(s, ( strlen(s)+ strlen(as_val_val) +1 ) * sizeof(char));
         strcat(s,as_val_val);
-
-
     }
    return s;
 }
 
-char* as_variable(ast_t* ast,int id){
+char* as_variable(ast_t* ast,list_t* list){
     char* s = calloc(1,sizeof(char));
-    if(ast->type == AST_INT){
-        const char* template = "$%d";
-        s = realloc(s,(strlen(template) +256 )* sizeof(char));
-        sprintf(s,template,ast->int_value);
-    } else{
-        const char* template = "%d(%%esp)";
-        s = realloc(s,(strlen(template) +8) * sizeof(char));
-        sprintf(s,template,id);
+
+    ast_t *var = var_lookup(list,ast->name);
+
+    if(!var){
+        printf("[AST Fronted]:'%s' is not defined\n",ast->name);
+        exit(-1);
     }
+    const char* template = "%d(%%esp)";
+    s = realloc(s,(strlen(template) + 8) * sizeof(char));
+    sprintf(s,template,var->int_value);
+
     return s;
 }
 
-char* as_call(ast_t* ast){
+char* as_call(ast_t* ast,list_t* list){
     char *s = calloc(1,sizeof(char));
     if(strcmp(ast->name,"return") == 0){
         ast_t* first_arg = ast->value->child->size ? ast->value->child->items[0] : 0;
@@ -62,8 +81,8 @@ char* as_call(ast_t* ast){
         var_s[1] ='0';
         var_s[2] = '\0';
 
-        if(first_arg && first_arg->type == AST_VARIABLE){
-            char* as_var = as_variable(first_arg,8);
+        if(first_arg){
+            char* as_var = as(first_arg,list);
             var_s = realloc(var_s, (strlen(as_var) + 1 ) * sizeof(char));
             strcpy(var_s,as_var);
             free(as_var);
@@ -80,20 +99,25 @@ char* as_call(ast_t* ast){
     return s;
 }
 
-char* as_int(ast_t* ast){
+char* as_int(ast_t* ast,list_t* list){
     return "";
 }
 
-char* as_access(ast_t* ast){
-    char* s = calloc(1,sizeof(char));
-//    ast_t* first_arg =  ast->value->child->size ? ast->value->child->items[0] : 0;
-//    printf("%d\n",first_arg->int_value);
-
+char* as_access(ast_t* ast,list_t* list){
+    ast_t* left = var_lookup(list,ast->name);
+    char * left_as = as(left,list);
+    ast_t* first_arg =  ast->value->child->size ? ast->value->child->items[0] : 0;
+    const char* template = "%s,%%eax\n"
+                           "    movl %d(%%eax)";
+   char* s= calloc(strlen(template) + strlen(left_as) + 128, sizeof(char));
+   sprintf(s,template,left_as, (first_arg ? first_arg->int_value : 0) * 4);
+    printf("%s\n",s);
+   free(left_as);
     return s;
 }
 
 
-char *as_root(ast_t* ast){
+char *as_root(ast_t* ast,list_t* list){
     const char* section = ".section .text\n"
                           ".global _start\n"
                           "_start:\n"
@@ -107,36 +131,33 @@ char *as_root(ast_t* ast){
     char* value = calloc( (strlen(section) + 128) , sizeof(char ));
     strcpy(value,section);
 
-    char* next_value = as(ast);
+    char* next_value = as(ast,list);
     value = realloc(value,(strlen(next_value) + strlen(value) +1) *sizeof(char));
     strcat(value,next_value);
     return value;
 }
 
-
-
-char* as(ast_t *ast) {
-
+char* as(ast_t *ast,list_t* list) {
     char* value = calloc(1, sizeof(char ));
     char * next_value = NULL;
     switch (ast->type) {
         case AST_COMPOUND:{
-            next_value = as_compound(ast);
+            next_value = as_compound(ast,list);
         }break;
         case AST_ASSIGNMENT :{
-            next_value = as_assignment(ast);
+            next_value = as_assignment(ast,list);
         }break;
         case AST_VARIABLE:{
-            next_value = as_variable(ast,0);
+            next_value = as_variable(ast,list);
         }break;
         case AST_CALL:{
-            next_value = as_call(ast);
+            next_value = as_call(ast,list);
         }break;
         case AST_INT:{
-            next_value = as_int(ast);
+            next_value = as_int(ast,list);
         }break;
         case AST_ACESS:{
-            next_value = as_access(ast);
+            next_value = as_access(ast,list);
         }break;
         default:{
             printf("[as fronted]: No fronted for ast of type '%d'\n",ast->type);

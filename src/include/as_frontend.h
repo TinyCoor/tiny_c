@@ -7,8 +7,8 @@
 
 #include "ast.h"
 
-char* as_root(ast_t* ast);
+char* as_root(ast_t* ast,list_t* list);
 
-char* as(ast_t *ast);
+char* as(ast_t *ast,list_t* list);
 
 #endif //TINY_C_AS_FRONTEND_H
