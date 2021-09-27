@@ -100,7 +100,14 @@ char* as_call(ast_t* ast,list_t* list){
 }
 
 char* as_int(ast_t* ast,list_t* list){
-    return "";
+    char* template = "$%d";
+    char* s = calloc(strlen(template)+128,sizeof(char));
+    sprintf(s,template,ast->int_value);
+    return s;
+}
+
+char* as_string(ast_t* ast,list_t* list){
+    return ast->string_value;
 }
 
 char* as_access(ast_t* ast,list_t* list){
@@ -140,6 +147,7 @@ char *as_root(ast_t* ast,list_t* list){
 char* as(ast_t *ast,list_t* list) {
     char* value = calloc(1, sizeof(char ));
     char * next_value = NULL;
+
     switch (ast->type) {
         case AST_COMPOUND:{
             next_value = as_compound(ast,list);
@@ -156,8 +164,11 @@ char* as(ast_t *ast,list_t* list) {
         case AST_INT:{
             next_value = as_int(ast,list);
         }break;
-        case AST_ACESS:{
+        case AST_ACCESS:{
             next_value = as_access(ast,list);
+        }break;
+        case AST_STRING:{
+            next_value = as_string(ast,list);
         }break;
         default:{
             printf("[as fronted]: No fronted for ast of type '%d'\n",ast->type);

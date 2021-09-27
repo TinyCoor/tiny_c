@@ -10,6 +10,5 @@ ast_t *ast_init(int type) {
     if(type == AST_COMPOUND)
         root->child = list_init(sizeof(struct AST_STRUCT));
 
-
     return root;
 }

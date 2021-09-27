@@ -98,7 +98,7 @@ ast_t* parser_parse_id(parser_t* parser){
             ast->value = parser_parse_list(parser);
         } else{
             if (parser->token->type == TOKEN_LBRACKET){
-                ast->type = AST_ACESS;
+                ast->type = AST_ACCESS;
                 ast->value= parser_parse_list(parser);
             }
         }

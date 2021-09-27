@@ -15,5 +15,4 @@ list_t* list_init(size_t item_size);
 
 void list_push(list_t* list,void* item);
 
-
 #endif //TINY_C_LIST_H

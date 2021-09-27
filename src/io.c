@@ -30,7 +30,7 @@ char *read_file(const char *file_name) {
         exit(-1);
     }
 
-    char *buffer =(char*)malloc((size_t)pos* sizeof(char));
+    char *buffer =(char*) malloc((size_t)pos * sizeof(char));
     memset(buffer,0,pos);
     size_t n = fread(buffer, 1, (size_t)pos, file);
     if (ferror(file)) {
