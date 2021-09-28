@@ -3,18 +3,35 @@
 //
 
 #include "include/tiny_c_builtins.h"
+#include "include/utils.h"
 #include <stdio.h>
 #include <string.h>
 
 struct AST_STRUCT* fptr_print(visitor_t* visitor,struct AST_STRUCT* node, list_t* list){
     printf("execute builtins function\n");
     ast_t* ast = ast_init(AST_STRING);
+    ast_t* first_arg = list->size ? list->items[0]: 0;
+    char* hexstr = NULL;
+
+    char* instr = calloc(128,sizeof(char ));
+
+    if(first_arg ){
+        sprintf(instr,"%d",first_arg->int_value);
+        hexstr = str_to_hex(instr);
+    }
+
     const char* template =
-            "    movl $4,%eax\n"
-            "    movl $0,%ebx\n"
-            "    movl $0,%ecx\n"
+            "    movl $4,%%eax\n"
+            "    movl $1,%%ebx\n"
+            "    pushl $0x%s\n"
+            "    movl %%esp,%%ecx\n"
+            "    movl $%d,%%edx\n"
             "    int $0x80\n";
-    ast->string_value= mkstr(template);
+
+    char* asmb = calloc( (hexstr? strlen(hexstr) : 0) + strlen(template) + 1, sizeof(char ));
+    sprintf(asmb, template, hexstr ? hexstr : "$0", hexstr ? strlen(hexstr) : 0);
+    ast->string_value= asmb;
+    free(hexstr);
     return ast;
 }
 
