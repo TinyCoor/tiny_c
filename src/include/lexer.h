@@ -36,7 +36,9 @@ token_t* lexer_advance_with(lexer_t* lexer,token_t* token);
 
 token_t* lexer_parse_id(lexer_t* lexer);
 
-token_t *lexer_parse_number(lexer_t *pStruct);
+token_t *lexer_parse_number(lexer_t *lexer);
+
+token_t *lexer_parse_string(lexer_t *lexer);
 
 token_t* lexer_next_token(lexer_t* lexer);
 

@@ -7,4 +7,9 @@
 
 char* str_to_hex(const char* instr);
 
+char** string_to_hex_chunks(const char* instr,int* nr_chunks);
+
+char* mkstr(const char* str);
+
+
 #endif //TINY_C_UTILS_H

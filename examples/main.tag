@@ -1,3 +1,4 @@
 main = (argc:int,argv:Array<string>):int =>{
-    return (0);
+    print("hello this is the tag");
+    return (15);
 }

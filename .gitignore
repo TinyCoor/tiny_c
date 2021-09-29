@@ -1,2 +1,7 @@
 /cmake-build-debug
+/cmake-build-release
 .idea
+/examples/*.o
+/examples/*.exe
+/examples/*.s
+.vs

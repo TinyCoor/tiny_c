@@ -42,7 +42,7 @@ token_t *lexer_next_token(lexer_t *lexer) {
             case '<':{return lexer_advance_current(lexer,TOKEN_LT);}
             case '>':{return lexer_advance_current(lexer,TOKEN_GT);}
             case ';':{return lexer_advance_current(lexer,TOKEN_SEMI);}
-
+            case '"':{return lexer_parse_string(lexer);}
             case '\0':{break;}
             default:{
                 printf("[Lexer]: Unexpected character '%c'\n",lexer->c);
@@ -103,6 +103,19 @@ token_t *lexer_advance_current(lexer_t *lexer, int type) {
     token_t* token= token_init(value,type);
     lexer_advance(lexer);
     return token;
+}
+
+token_t *lexer_parse_string(lexer_t *lexer) {
+    char *value= calloc(1,sizeof(char ));
+
+    lexer_advance(lexer);
+    while (lexer->c !='"'){
+        value = realloc(value,(strlen(value) + 2) *sizeof(char ));
+        strcat(value,(char[]){lexer->c,0});
+        lexer_advance(lexer);
+    }
+    lexer_advance(lexer);
+    return token_init(value,TOKEN_STRING);
 }
 
 

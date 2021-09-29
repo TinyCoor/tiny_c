@@ -27,6 +27,8 @@ ast_t* parser_parse_block(parser_t* parser);
 
 ast_t* parser_parse_int(parser_t* parser);
 
+ast_t* parser_parse_string(parser_t* parser);
+
 token_t* parser_consume(parser_t* parser,int type);
 
 

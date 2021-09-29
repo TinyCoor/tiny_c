@@ -20,4 +20,26 @@ char* str_to_hex(const char* instr){
     return hexstr;
 }
 
+char* mkstr(const char* str){
+    char* outstr = calloc(strlen(str)+1,sizeof(char));
+    strcpy(outstr,str);
+    return outstr;
+}
 
+char ** string_to_hex_chunks(const char *instr, int* nr_chunks) {
+    unsigned int length= strlen(instr);
+    unsigned int nChunks = (length/4) + 1;
+    *nr_chunks =(int)nChunks;
+    char** strlist = calloc(nChunks * 5 ,sizeof(char ));
+    char* tmp = calloc(1,sizeof(char ));
+
+    for (int i = 0; i < (length/4) + 1; ++i) {
+        char* chunk_str = mkstr(instr +(i * 4));
+        chunk_str = realloc(chunk_str,4);
+        chunk_str[4] = 0;
+        char* hex_str = str_to_hex(chunk_str);
+        strlist[i] = hex_str;
+
+    }
+    return strlist;
+}

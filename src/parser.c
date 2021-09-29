@@ -3,6 +3,7 @@
 //
 #include "include/parser.h"
 #include "include/types.h"
+#include "include/utils.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -55,6 +56,7 @@ ast_t *parser_parse_expr(parser_t *parser) {
         case TOKEN_ID:return parser_parse_id(parser);
         case TOKEN_LPAREN: return parser_parse_list(parser);
         case TOKEN_INT: return parser_parse_int(parser);
+        case TOKEN_STRING: return parser_parse_string(parser);
         default: {
             printf("[Parser]:Unexpected token `%s`\n", token_type_to_cstr(parser->token->type));
             assert(false && " Unreachable Code\n");
@@ -159,6 +161,14 @@ ast_t *parser_parse_int(parser_t *parser) {
     parser_consume(parser,TOKEN_INT);
     ast_t* ast =ast_init(AST_INT);
     ast->int_value = value;
+    return ast;
+}
+
+ast_t *parser_parse_string(parser_t *parser) {
+    char* value = mkstr(parser->token->value);
+    parser_consume(parser,TOKEN_STRING);
+    ast_t *ast = ast_init(AST_STRING);
+    ast->string_value = value;
     return ast;
 }
 

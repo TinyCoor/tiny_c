@@ -10,8 +10,6 @@ typedef struct AST_STRUCT* (*fptr)(visitor_t*,ast_t* ,list_t*);
 
 struct AST_STRUCT* fptr_print(visitor_t* visitor,struct AST_STRUCT* node, list_t* list);
 
-char* mkstr(const char* str);
-
 void builtins_init(list_t* list);
 
 void builtins_register_fptr(list_t* list,const char* name,fptr ptr);

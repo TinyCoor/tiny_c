@@ -12,12 +12,14 @@ set(TINY_C_HEADER ./src/include/lexer.h
         ./src/include/ast.h
         ./src/include/types.h
         ./src/include/as_frontend.h
-        )
+        src/include/visitor.h
+        src/include/tiny_c_builtins.h src/include/utils.h src/utils.c)
 
 add_executable(tiny_c ${TINY_C_SOURCE}  ${TINY_C_HEADER})
 
 #该命令会在构建完成生成tiny_c 可执行文件时 执行tiny_c main.tag 命令
 add_custom_command(
+#        OUTPUT
         TARGET tiny_c
         POST_BUILD
         COMMAND
