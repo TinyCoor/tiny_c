@@ -28,14 +28,13 @@ char* mkstr(const char* str){
 }
 
 list_t *string_to_hex_chunks(const char *instr) {
-
     list_t* list = list_init(sizeof(char*));
     unsigned  int idx =0;
     char* tmp= calloc(1, sizeof(char));
     while (instr[idx] != '\0'){
         tmp = realloc(tmp, (strlen(tmp) + 2) * sizeof(char ));
         strcat(tmp,(char[]){instr[idx],0});
-        if(idx % 4 == 0 || instr[idx] == '\n') {
+        if((idx -1 )% 4 == 0 || instr[idx] == '\n' || instr[idx] =='\t') {
             char* hex = str_to_hex(tmp);
             list_push(list, hex);
             free(tmp);
