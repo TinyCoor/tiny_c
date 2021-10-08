@@ -23,9 +23,9 @@ struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_
             sprintf(instr,"%d",first_arg->int_value);
         }
 
-
         char** chunks = string_to_hex_chunks(instr,&nr_chunks);
         char * str_push = calloc(1,sizeof(char ));
+
         char* push_template = "    pushl $0x%s\n";
         for (int i = 0; i <nr_chunks ; ++i) {
             char* push_hex= chunks[nr_chunks - i -1];
@@ -41,8 +41,8 @@ struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_
             "    movl $4,%%eax\n"
             "    movl $1,%%ebx\n"
             "%s\n"
-            "    addl $%d,%%esp\n"
             "    movl %%esp,%%ecx\n"
+            "    addl $%d,%%esp\n"
             "    movl $%d,%%edx\n"
             "    int $0x80\n";
 
@@ -59,7 +59,6 @@ void builtins_register_fptr(list_t* list,const char* name,fptr ptr){
     fptr_print_var->fptr= ptr;
     list_push(list,fptr_print_var);
 }
-
 
 void builtins_init(list_t* list){
     builtins_register_fptr(list,"print",fptr_print);

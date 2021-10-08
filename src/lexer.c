@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "include/macros.h"
+#include "include/utils.h"
 
 lexer_t* lexer_init(char* src){
     lexer_t* lexer = calloc (1,sizeof(struct LEXER_STRUCT));
@@ -115,8 +116,11 @@ token_t *lexer_parse_string(lexer_t *lexer) {
         lexer_advance(lexer);
     }
     lexer_advance(lexer);
-    return token_init(value,TOKEN_STRING);
+    char *format = str_format(value);
+    free(value);
+    return token_init(format,TOKEN_STRING);
 }
+
 
 
 
