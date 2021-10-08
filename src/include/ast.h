@@ -6,6 +6,7 @@
 #define TINY_C_AST_H
 #include "list.h"
 struct VISITOR_STRUCT;
+
 typedef struct AST_STRUCT{
 enum {
     AST_COMPOUND,

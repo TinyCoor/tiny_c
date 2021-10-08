@@ -14,7 +14,6 @@ struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_
     char* hexstr = NULL;
     char* instr = NULL;
     int nr_chunks = 0;
-
     if(first_arg ){
         if(first_arg->type == AST_STRING){
             instr = first_arg->string_value;
@@ -23,12 +22,13 @@ struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_
             sprintf(instr,"%d",first_arg->int_value);
         }
 
-        char** chunks = string_to_hex_chunks(instr,&nr_chunks);
+        list_t* chunks = string_to_hex_chunks(instr);
+        int nr_chunks = chunks->size;
         char * str_push = calloc(1,sizeof(char ));
 
         char* push_template = "    pushl $0x%s\n";
-        for (int i = 0; i <nr_chunks ; ++i) {
-            char* push_hex= chunks[nr_chunks - i -1];
+        for (int i = 0; i <chunks->size ; ++i) {
+            char* push_hex= chunks->items[chunks->size - i - 1];
             char* push = calloc(strlen(push_hex) + strlen(push_template) + 1, sizeof(char ));
             sprintf(push,push_template,push_hex);
             str_push = realloc(str_push, (strlen(str_push)+ strlen(push) +1) *sizeof(char ));

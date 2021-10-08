@@ -27,20 +27,23 @@ char* mkstr(const char* str){
     return outstr;
 }
 
-char ** string_to_hex_chunks(const char *instr, int* nr_chunks) {
-    unsigned int length= strlen(instr);
-    unsigned int nChunks = (length/4) + 1;
-    *nr_chunks =(int)nChunks;
-    char** strlist = calloc(nChunks * 5 ,sizeof(char*));
+list_t *string_to_hex_chunks(const char *instr) {
 
-    for (int i = 0; i < (length/4) + 1; ++i) {
-        char* chunk_str = mkstr(instr +(i * 4));
-        chunk_str = realloc(chunk_str,4);
-        chunk_str[4] = 0;
-        char* hex_str = str_to_hex(chunk_str);
-        strlist[i] = hex_str;
+    list_t* list = list_init(sizeof(char*));
+    unsigned  int idx =0;
+    char* tmp= calloc(1, sizeof(char));
+    while (instr[idx] != '\0'){
+        tmp = realloc(tmp, (strlen(tmp) + 2) * sizeof(char ));
+        strcat(tmp,(char[]){instr[idx],0});
+        if(idx % 4 == 0 || instr[idx] == '\n') {
+            char* hex = str_to_hex(tmp);
+            list_push(list, hex);
+            free(tmp);
+            tmp = calloc(1,sizeof(char));
+        }
+        idx +=1;
     }
-    return strlist;
+    return list;
 }
 
 char str_to_escape_seq(const char *instr) {

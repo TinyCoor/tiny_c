@@ -4,10 +4,10 @@
 
 #ifndef TINY_C_UTILS_H
 #define TINY_C_UTILS_H
-
+#include "list.h"
 char* str_to_hex(const char* instr);
 
-char** string_to_hex_chunks(const char* instr,int* nr_chunks);
+list_t* string_to_hex_chunks(const char* instr);
 
 char* mkstr(const char* str);
 
