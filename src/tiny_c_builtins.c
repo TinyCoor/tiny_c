@@ -46,8 +46,10 @@ struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_
             "    movl $%d,%%edx\n"
             "    int $0x80\n";
 
+    unsigned int nr_bytes = nr_chunks * 4;
+
     char* asmb = calloc( (hexstr? strlen(hexstr) : 0) + strlen(template) + 1, sizeof(char ));
-    sprintf(asmb, template, hexstr ? hexstr : "$0", strlen(instr) * 2,nr_chunks * 4);
+    sprintf(asmb, template, hexstr ? hexstr : "$0", nr_bytes,nr_bytes);
     ast->string_value= asmb;
     free(hexstr);
     return ast;
