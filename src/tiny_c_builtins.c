@@ -8,31 +8,29 @@
 #include <string.h>
 
 struct AST_STRUCT* fptr_print(visitor_t* visitor, struct AST_STRUCT* node, list_t* list){
-    printf("execute builtins function\n");
     ast_t* ast = ast_init(AST_STRING);
     ast_t* first_arg = list->size ? list->items[0]: 0;
     char* hexstr = NULL;
-    char* instr = NULL;
-    int nr_chunks = 0;
+    char* instr = first_arg ? first_arg->string_value : NULL;
+    unsigned nr_chunks = 0;
     if(first_arg ){
-        if(first_arg->type == AST_STRING){
-            instr = first_arg->string_value;
-        } else if(first_arg->type == AST_INT){
+        if(first_arg->type == AST_INT){
             instr = calloc(128, sizeof(char));
             sprintf(instr,"%d",first_arg->int_value);
         }
-
         list_t* chunks = string_to_hex_chunks(instr);
-        int nr_chunks = chunks->size;
+        nr_chunks = chunks->size;
         char * str_push = calloc(1,sizeof(char ));
-
         char* push_template = "    pushl $0x%s\n";
+
         for (int i = 0; i <chunks->size ; ++i) {
             char* push_hex= chunks->items[chunks->size - i - 1];
             char* push = calloc(strlen(push_hex) + strlen(push_template) + 1, sizeof(char ));
             sprintf(push,push_template,push_hex);
             str_push = realloc(str_push, (strlen(str_push)+ strlen(push) +1) *sizeof(char ));
             strcat(str_push,push);
+            free(push_hex);
+            free(push);
         }
         hexstr = str_push;
     }
